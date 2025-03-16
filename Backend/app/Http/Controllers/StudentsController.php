@@ -10,6 +10,22 @@ use Illuminate\Support\Facades\Hash;
 
 class StudentsController extends Controller
 {
+    public function index(Request $request)
+    {
+
+        $students = Student::whereHas('group', function ($query) use ($request) {
+            $query->where('group_name', $request->group);
+        })->with('group:group_id,group_name')->get();
+
+        $students->each(function ($student) {
+            $student->absences_count = $student->attendances->where('attended', false)->count();
+        });
+        $students->each(function ($s) {
+            $s->mark -= $s->absences_count * 2;
+        });
+        return response()->json($students);
+    }
+
 
     public function login(Request $request)
     {
@@ -45,7 +61,7 @@ class StudentsController extends Controller
     {
         $student = auth()->user();
 
-       
+
         if (!$student) {
             return response()->json(['message' => 'User not authenticated'], 401);
         }
@@ -54,7 +70,7 @@ class StudentsController extends Controller
             'first_name' => $student->first_name,
             'last_name' => $student->last_name,
             'gmail' => $student->gmail,
-            'student_id' => $student->student_id, 
+            'student_id' => $student->student_id,
             'card_number' => $student->card_number,
             'phone_number' => $student->phone_number,
         ]);
@@ -62,8 +78,6 @@ class StudentsController extends Controller
     public function getStudentDetails(Request $request)
     {
         $studentId = auth()->user()->student_id;
-
-
         $student = Student::with('group')
             ->select('first_name', 'last_name', 'group_id')
             ->where('student_id', $studentId)

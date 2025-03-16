@@ -12,7 +12,8 @@ class BranchesController extends Controller
      */
     public function index()
     {
-        //
+        $branches = Branch::with('groups')->get();
+        return response()->json($branches);
     }
 
     /**

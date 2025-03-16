@@ -20,7 +20,6 @@ import {
 import { useOutletContext } from "react-router-dom";
 import Loading from "../../Tools/Loading";
 
-
 const token = localStorage.getItem("auth_token");
 
 const StatusCard = ({ title, value, icon: Icon, color, darkMode }) => (
@@ -125,7 +124,7 @@ const Statistique = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        "http://127.0.0.1:8000/api/admin/getStatistics",
+        `${import.meta.env.VITE_BACKEND_URL}/admin/getStatistics`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

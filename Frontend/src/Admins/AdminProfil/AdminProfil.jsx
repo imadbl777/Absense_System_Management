@@ -12,7 +12,7 @@ const AdminProfile = ({ isExpand, darkMode }) => {
     const fetchAdminDetails = async () => {
       try {
         const response = await fetch(
-          "http://127.0.0.1:8000/api/admin/details",
+          `http://127.0.0.1:8000/api/admin/details`,
           {
             method: "GET",
             headers: {

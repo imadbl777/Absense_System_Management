@@ -2,64 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Attendance;
 use Illuminate\Http\Request;
+use App\Models\Attendance;
 
 class AttendanceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function markAttendance(Request $request)
     {
-        //
+        $studentId = $request->input('student_id');
+        $sessionId = $request->input('session_id');
+
+        if (!$sessionId) {
+            return response()->json(['message' => 'Session not found'], 400);
+        }
+
+        $attendance = Attendance::firstOrCreate(
+            ['student_id' => $studentId, 'session_id' => $sessionId],
+            ['attended' => 1]
+        );
+
+        return response()->json(['message' => 'Attendance marked successfully'], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function s()
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Attendance $attendance)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Attendance $attendance)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Attendance $attendance)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Attendance $attendance)
-    {
-        //
+        $isattended = Attendance::with('student')->where("attended", "=", false)->get();
+        $student = $isattended->map(function ($a) {
+            return $a->student->first_name . $a->student->last_name;
+        });
+        return response()->json($student);
     }
 }

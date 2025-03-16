@@ -14,7 +14,7 @@ class SessionsController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -64,5 +64,28 @@ class SessionsController extends Controller
     {
         //
     }
-   
+    public function getSessionInfo($sessionId)
+    {
+        // Retrieve the session with its relationships
+        $session = Session::with(['subject', 'group', 'professor', 'attendance', 'justifications'])
+            ->find($sessionId);
+
+        // Check if the session exists
+        if (!$session) {
+            return response()->json(['error' => 'Session not found'], 404);
+        }
+
+        // Return session data
+        return response()->json([
+            'session_id' => $session->session_id,
+            'subject' => $session->subject,
+            'group' => $session->group,
+            'professor' => $session->professor,
+            'date' => $session->session_date->toDateString(),
+            'hours' => $session->session_hours,
+            'time' => $session->time,
+        ]);
+    }
+
+
 }

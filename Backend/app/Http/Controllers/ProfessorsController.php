@@ -90,7 +90,36 @@ class ProfessorsController extends Controller
 
     //     return response()->json([
     //         'token' => $token->plainTextToken,
-    //         'role' => "admin"
+    //   "prof"' => "admin"
     //     ]);
     // }
+    public function login(Request $request)
+    {
+
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        $user = Professor::where('gmail', $request->input('email'))->first();
+
+
+        if (!$user) {
+            return response()->json(['message' => 'User Not Found'], 401);
+        }
+
+
+        if ($request->input('password') !== $user->password) {
+            return response()->json(['message' => 'Wrong password'], 401);
+        }
+
+
+        $token = $user->createToken('auth_token');
+
+
+        return response()->json([
+            'token' => $token->plainTextToken,
+            'role' => "prof"
+        ]);
+    }
 }

@@ -5,7 +5,7 @@ import Justification from "../Admins/Gestion de justification/Jusification";
 import AlertSystem from "../Admins/Alerts/AlertSystem";
 import AdminDashboard from "../Admins/Dashboard/AdminDashboard";
 import StudentProfile from "../Students/Navigation/SideMenu/StudentProfile";
-import Authsystem from "../Students/Authsystem";
+
 import StudentJustificationForm from "../Students/Justifications/StudentJustificationForm";
 import StudentLogin from "../Students/Login/StudentLogin";
 import AdminLogin from "../Admins/login/AdminLogin";
@@ -15,11 +15,16 @@ import StudentLayout from "../Students/Layouts/StudentLayout";
 import Reclamations from "../Admins/Reclamations/Reclamations";
 import StudentChat from "../Students/StudentChat";
 import NotFoundPage from "../Global/NotFound";
+import ProfLogin from "../Professors/login/ProfLogin";
 import SuiviDesJustification from "../Students/Justifications/Suivi des Justificatifs/SuiviDesJustification";
+import ProfLayout from "../Professors/Layouts/ProfLayout";
+import ProfDashboard from "../Professors/Dashboard/ProfDashboard";
+import AuthSystem from "../AuthSystem";
+import AdminProfile from "../Admins/AdminProfil/AdminProfil";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Authsystem />,
+    element: <AuthSystem />,
   },
   {
     path: "/student/login",
@@ -28,6 +33,10 @@ export const router = createBrowserRouter([
   {
     path: "/admin/login",
     element: <AdminLogin />,
+  },
+  {
+    path: "/professor/login",
+    element: <ProfLogin />,
   },
   {
     element: (
@@ -56,6 +65,39 @@ export const router = createBrowserRouter([
       {
         path: "/admin-dashboard",
         element: <AdminDashboard />,
+      },
+      {
+        path: "/Gestion_De_Justification",
+        element: <Justification />,
+      },
+      {
+        path: "/Consultation_Des_Absences",
+        element: <GroupsLists />,
+      },
+      {
+        path: "/Alerts",
+        element: <AlertSystem />,
+      },
+      {
+        path: "/Reclamations",
+        element: <Reclamations />,
+      },
+      {
+        path: "/admin/profile",
+        element: <AdminProfile />,
+      },
+    ],
+  },
+  {
+    element: (
+      <ProtectedRoute allowedRole="prof">
+        <ProfLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: "/professor-dashboard",
+        element: <ProfDashboard />,
       },
       {
         path: "/Gestion_De_Justification",

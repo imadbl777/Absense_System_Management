@@ -14,9 +14,11 @@ class GroupsController extends Controller
         return Branch::all(['branch_id', 'branch_name']);
     }
 
-    public function getGroups()
+    public function getGroups(Request $request)
     {
-        return Group::with('branch:branch_id,branch_name')->get(['group_id', 'group_name', 'branch_id']);
+
+        return Group::with('students')->where("group_name", "=", $request->group)->get();
+
     }
     public function getStudents(Request $request)
     {

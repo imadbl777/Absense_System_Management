@@ -11,23 +11,25 @@ class SessionsTableSeeder extends Seeder
     {
         DB::table('sessions')->insert([
             [
-                'subject_id' => 1, 
-                'group_id' => 1, 
-                'prof_id' => 1, 
-                'session_date' => '2024-11-01', 
-                'session_hours' => 2, 
-                'session_topic' => 'Calculus', 
-                'created_at' => now(), 
+                'subject_id' => 1,
+                'group_id' => 1,
+                'prof_id' => 1,
+                'session_date' => '2025-01-12',
+                'session_hours' => 2,
+                'time' => "14:30",
+                'session_topic' => 'Calculus',
+                'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'subject_id' => 2, 
-                'group_id' => 2, 
-                'prof_id' => 2, 
-                'session_date' => '2024-11-02', 
-                'session_hours' => 3, 
-                'session_topic' => 'Thermodynamics', 
-                'created_at' => now(), 
+                'subject_id' => 2,
+                'group_id' => 2,
+                'prof_id' => 2,
+                'session_date' => '2025-01-12',
+                'session_hours' => 5,
+                'time' => "08:30",
+                'session_topic' => 'Thermodynamics',
+                'created_at' => now(),
                 'updated_at' => now()
             ],
         ]);

@@ -1,7 +1,7 @@
 import { useOutletContext } from "react-router-dom";
 
-
 import Statistique from "./Statistique";
+
 
 const AdminDashboard = () => {
   const [darkMode] = useOutletContext();
@@ -11,9 +11,7 @@ const AdminDashboard = () => {
         darkMode ? `bg-gray-900` : `bg-gray-50`
       }`}
     >
-      
       <Statistique darkmode={darkMode} />
-     
     </div>
   );
 };
