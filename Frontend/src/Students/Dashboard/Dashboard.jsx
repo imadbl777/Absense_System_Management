@@ -1,14 +1,18 @@
 import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import { Calendar, Clock, AlertTriangle, Award } from "lucide-react";
+import { Calendar, Clock, AlertTriangle } from "lucide-react";
 import AbsenceCalendar from "./AbsenceCalendar";
 import HistoriqueDabsences from "./HistoriqueDabsences";
 import StatCard from "./StatCard";
-import Loading from "./Loading";
+
+import useFetch from "../../Hooks/useFetch";
+import Loading from "../../Tools/Loading";
 
 const Dashboard = () => {
-  const [darkMode, studentInfo, loading] = useOutletContext();
-
+  const [darkMode] = useOutletContext();
+  const { data: studentInfo, loading: loadingStudents } = useFetch(
+    "http://127.0.0.1:8000/api/student/profil"
+  );
   const disciplinePoints = 15;
   const [currentMonth, setCurrentMonth] = useState(new Date(2024, 9));
   const absences = [
@@ -38,7 +42,7 @@ const Dashboard = () => {
   };
 
   const status = getPointsStatus();
-  if (loading) {
+  if (loadingStudents) {
     return <Loading />;
   }
 
@@ -79,15 +83,7 @@ const Dashboard = () => {
             </p>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatCard
-            title="La Note de discipline"
-            value={disciplinePoints}
-            subtitle={status.message}
-            icon={Award}
-            valueColor={status.color}
-            darkMode={darkMode}
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 px-7 gap-6">
           <StatCard
             title="Absences totales"
             value={totalAbsences}
@@ -105,7 +101,7 @@ const Dashboard = () => {
           />
         </div>
 
-        <div className="flex p-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 ">
           <AbsenceCalendar
             absences={absences}
             currentMonth={currentMonth}

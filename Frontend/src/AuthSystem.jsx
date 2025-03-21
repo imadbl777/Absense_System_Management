@@ -2,6 +2,16 @@ const AuthSystem = () => {
   const handleSelectedRole = (role) => {
     window.location.href = `/${role}/login`;
   };
+  const role = localStorage.getItem("user_role");
+
+  if (role === "admin") {
+    window.location.href = `/admin-dashboard`;
+  } else if (role === "student") {
+    window.location.href = `/student-dashboard`;
+  } else if (role === "prof") {
+    window.location.href = `/professor-dashboard`;
+  }
+
   return (
     <div className="h-screen w-full lg:flex items-center justify-center">
       <div className="relative h-2/3 lg:w-1/2">

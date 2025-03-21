@@ -27,7 +27,7 @@ const AbsenceCalendar = ({ absences, currentMonth, setCurrentMonth, darkMode }) 
   };
 
   return (
-    <div className={`rounded-xl shadow-md p-4 w-2/3 ${darkMode ? "bg-gray-800" : "bg-white"}`}>
+    <div className={`rounded-xl shadow-md p-4 m-6 ${darkMode ? "bg-gray-800" : "bg-white"}`}>
       <div className="flex justify-between items-center mb-4">
         <h2 className={`text-lg font-semibold ${darkMode ? "text-gray-200" : "text-gray-800"}`}>Présence</h2>
         <div className="flex items-center gap-3">

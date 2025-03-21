@@ -67,12 +67,14 @@ class StudentsController extends Controller
         }
 
         return response()->json([
+            'name' => $student->first_name . " " . $student->last_name,
             'first_name' => $student->first_name,
             'last_name' => $student->last_name,
             'gmail' => $student->gmail,
             'student_id' => $student->student_id,
             'card_number' => $student->card_number,
             'phone_number' => $student->phone_number,
+            'group_name' => $student->group ? $student->group->group_name : null,
         ]);
     }
     public function getStudentDetails(Request $request)
@@ -95,4 +97,14 @@ class StudentsController extends Controller
         ]);
     }
 
+    public function searching(Request $request)
+    {
+        $re = $request->query('search');
+        if (!$re) {
+            $students = [];
+        } else {
+            $students = Student::where('first_name', 'LIKE', $re . '%')->get();
+        }
+        return response()->json($students);
+    }
 }

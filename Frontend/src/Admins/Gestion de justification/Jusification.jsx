@@ -8,7 +8,6 @@ import ImageViewer from "./ImageViewer";
 import TabsComponent from "./TabsComponen";
 import Loading from "../../Tools/Loading";
 
-
 const Justification = () => {
   const [darkMode] = useOutletContext();
   const token = localStorage.getItem("auth_token");
@@ -20,11 +19,9 @@ const Justification = () => {
   const [justificationsList, setJustificationsList] = useState([]);
   const [loading, setLoading] = useState(true);
 
-
-
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/justifications", {
+      .get("http://127.0.0.1:8000/api/admin/justifications", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -33,7 +30,6 @@ const Justification = () => {
         const justifications = response.data.data;
         setJustificationsList(justifications);
         setLoading(false);
-        console.log(justifications);
       })
       .catch((error) => {
         console.error("Error fetching justifications:", error);
@@ -44,7 +40,9 @@ const Justification = () => {
   const handleAction = (justification, action, comment = "") => {
     axios
       .post(
-        `http://127.0.0.1:8000/api/justifications/${justification.justification_id}/review`,
+        `${import.meta.env.VITE_BACKEND_URL}/admin/justifications/${
+          justification.justification_id
+        }/review`,
         {
           status: action === "accept" ? "approved" : "rejected",
           admin_comment: comment,
@@ -108,6 +106,7 @@ const Justification = () => {
             openTraitementModal={openTraitementModal}
             onImageClick={handleImageClick}
             darkMode={darkMode}
+      
           />
 
           {show && selectedStudent && (
@@ -120,7 +119,7 @@ const Justification = () => {
               }
             />
           )}
-           
+
           {showImageViewer && selectedImage && (
             <ImageViewer imageUrl={selectedImage} onClose={closeImageViewer} />
           )}

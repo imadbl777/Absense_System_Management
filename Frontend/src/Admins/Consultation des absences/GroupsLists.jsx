@@ -1,14 +1,13 @@
 import { useState } from "react";
-import { Search, Download, FileSpreadsheet } from "lucide-react";
+import { Download, FileSpreadsheet } from "lucide-react";
 import * as XLSX from "xlsx";
 
 import { useOutletContext } from "react-router-dom";
 import Loading from "../../Tools/Loading";
 import StagairesProfile from "../Stagaires/StagairesProfile";
 import useFetch from "../../Hooks/useFetch";
-
-import Select2 from "./Select2";
-
+import Select from "./Select";
+import Search from "./Search";
 const GroupsLists = () => {
   const [darkMode] = useOutletContext();
   const [selectedGroup, setSelectedGroup] = useState("");
@@ -19,13 +18,17 @@ const GroupsLists = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const { data: branches, loading: loadingBranches } = useFetch(
-    `http://127.0.0.1:8000/api/admin/branches`
+    `${import.meta.env.VITE_BACKEND_URL}/api/admin/branches`
   );
 
   const { data: students, loading: loadingStudents } = useFetch(
-    `http://localhost:8000/api/students?group=${selectedGroup}`,
+    `${import.meta.env.VITE_BACKEND_URL}/api/students?group=${selectedGroup}`,
     [selectedGroup]
   );
+  const { data: finds, loading: findsLoading } = useFetch(
+    `http://localhost:8000/api/admin/student?search=${searchQuery}`
+  );
+  console.log(finds);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -46,14 +49,8 @@ const GroupsLists = () => {
       const exportData = students.map((student) => ({
         "Nom de l'étudiant": student.first_name + " " + student.last_name,
         Classe: student.group_name,
-        "Total Absences": student.total_absences,
-        "Absences Justifiées": student.justified_absences,
-        Retards: student.tardies,
-        "Note /20": student.grade,
-        "Taux de présence": `${(
-          (1 - student.total_absences / 100) *
-          100
-        ).toFixed(1)}%`,
+        Retards: student.absences_count,
+        "Note /20": student.mark,
         "Date d'export": new Date().toLocaleDateString("fr-FR"),
       }));
 
@@ -89,27 +86,20 @@ const GroupsLists = () => {
               {loadingBranches ? (
                 <h1>looading</h1>
               ) : (
-                <Select2
+                <Select
                   branches={branches}
                   setSelectedGroup={setSelectedGroup}
                   selectedGroup={selectedGroup}
                 />
               )}
             </div>
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Rechercher..."
-                className={`pl-9 pr-4 py-2 rounded-md w-full ${
-                  darkMode
-                    ? "bg-gray-700 text-gray-300"
-                    : "bg-white text-gray-800 border"
-                }`}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
+            <Search
+              darkMode={darkMode}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              findsLoading={findsLoading}
+              finds={finds}
+            />
             <div className="flex gap-2">
               <button
                 className={`flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 ${

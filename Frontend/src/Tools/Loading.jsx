@@ -4,11 +4,11 @@ const Loading = () => {
   const [darkMode] = useOutletContext();
   return (
     <div
-      className={`absolute inset-0 flex justify-center items-center min-h-screen min-w-full ${
+      className={`z-50 absolute inset-0 flex justify-center items-center min-h-screen min-w-screen ${
         darkMode ? "bg-gray-900" : "bg-white"
       }`}
     >
-      <div className="relative inline-flex">
+      <div className="relative inline-flex ">
         <div
           className={`w-8 h-8 ${
             darkMode ? "bg-blue-300" : "bg-blue-500"

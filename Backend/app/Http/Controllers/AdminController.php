@@ -127,7 +127,7 @@ class AdminController extends Controller
         ]);
     }
 
-    
+
     public function getProfile()
     {
         $admin = auth()->user();
@@ -146,7 +146,6 @@ class AdminController extends Controller
         $now = Carbon::now();
         $sixMonthsAgo = $now->copy()->subMonths(6);
 
-        // Get current month statistics
         $currentMonthStart = $now->copy()->startOfMonth();
         $currentMonth = [
             'total_justifications' => Justification::whereMonth('created_at', $now->month)->count(),
@@ -172,7 +171,7 @@ class AdminController extends Controller
             ];
         })->reverse()->values();
 
-        // Get top 5 students with most absences
+
         $topAbsentees = Student::select('students.*')
             ->selectRaw('COUNT(attendance.attendance_id) as total_absences')
             ->join('attendance', 'students.student_id', '=', 'attendance.student_id')

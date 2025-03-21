@@ -1,19 +1,19 @@
 import { useState } from "react";
 import axios from "axios";
 import { Lock, Mail, UserCog } from "lucide-react";
-
+import { ToastContainer, toast } from "react-toastify";
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const notify = (mes) => toast.error(`${mes}`);
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
-    const endpoint = `http://localhost:8000/api/admin/login`;
+    const endpoint = `${import.meta.env.VITE_BACKEND_URL}/api/admin/login`;
 
     try {
       const response = await axios.post(endpoint, { email, password });
@@ -31,7 +31,8 @@ const AdminLogin = () => {
       }
     } catch (err) {
       console.log(err);
-      setError("Les informations d`identification sont incorrectes");
+      setError(err.response?.data?.message);
+      notify(error);
     } finally {
       setIsLoading(false);
     }
@@ -48,12 +49,6 @@ const AdminLogin = () => {
           </div>
           <h2 className="text-3xl font-bold text-gray-800">Connexion Admin</h2>
         </div>
-
-        {error && (
-          <div className="mb-6 bg-red-500 border border-red-600 text-white text-center py-3 px-4 rounded-lg shadow">
-            {error}
-          </div>
-        )}
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
@@ -120,6 +115,18 @@ const AdminLogin = () => {
           </button>
         </form>
       </div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 };

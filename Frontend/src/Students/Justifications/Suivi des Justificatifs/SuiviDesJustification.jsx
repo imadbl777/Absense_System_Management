@@ -2,57 +2,26 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Loading from "../../../Tools/Loading";
 import { useOutletContext } from "react-router-dom";
-
+import useFetch from "../../../Hooks/useFetch";
 const SuiviDesJustification = () => {
-  const [justifications, setJustifications] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [downloadingIds, setDownloadingIds] = useState(new Set());
   const [darkMode] = useOutletContext();
-
+  
+  const {
+    data: justifications,
+    loading,
+    error,
+  } = useFetch("http://127.0.0.1:8000/api/student/my-justifications");
   const statusColors = {
     pending: "text-yellow-600 bg-yellow-100",
     approved: "text-green-600 bg-green-100",
     rejected: "text-red-600 bg-red-100",
   };
 
-  useEffect(() => {
-    fetchJustifications();
-  }, []);
-
-  const fetchJustifications = async () => {
-    try {
-      const token = localStorage.getItem("auth_token");
-      if (!token) {
-        setError("No authentication token found");
-        setLoading(false);
-        return;
-      }
-
-      const response = await axios.get(
-        "http://127.0.0.1:8000/api/my-justifications",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setJustifications(response.data);
-      setLoading(false);
-    } catch (err) {
-      console.error("Fetch Error:", err);
-      setError(
-        err.response?.data?.detail ||
-          "Failed to fetch justifications. Please try again."
-      );
-      setLoading(false);
-    }
-  };
-
   const downloadDocument = async (justificationId) => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/justifications/${justificationId}/download`,
+        `http://127.0.0.1:8000/api/student/justifications/${justificationId}/download`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
@@ -62,12 +31,8 @@ const SuiviDesJustification = () => {
       );
 
       const contentType = response.headers["content-type"];
-      const isImage = contentType && contentType.startsWith("image/");
 
-      if (!isImage) {
-        setError("The downloaded file is not an image");
-        return;
-      }
+ 
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
@@ -92,25 +57,6 @@ const SuiviDesJustification = () => {
         message: err.message,
       });
 
-      if (err.response) {
-        switch (err.response.status) {
-          case 403:
-            setError("You are not authorized to download this image");
-            break;
-          case 404:
-            setError("Image not found");
-            break;
-          case 500:
-            setError("Server error occurred while downloading the image");
-            break;
-          default:
-            setError(
-              "An unexpected error occurred while downloading the image"
-            );
-        }
-      } else {
-        setError("Network error. Please check your connection.");
-      }
     }
   };
 

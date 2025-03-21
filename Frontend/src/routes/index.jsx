@@ -4,23 +4,21 @@ import ProtectedRoute from "./ProtectedRoute";
 import Justification from "../Admins/Gestion de justification/Jusification";
 import AlertSystem from "../Admins/Alerts/AlertSystem";
 import AdminDashboard from "../Admins/Dashboard/AdminDashboard";
-import StudentProfile from "../Students/Navigation/SideMenu/StudentProfile";
 
 import StudentJustificationForm from "../Students/Justifications/StudentJustificationForm";
 import StudentLogin from "../Students/Login/StudentLogin";
 import AdminLogin from "../Admins/login/AdminLogin";
 import GroupsLists from "../Admins/Consultation des absences/GroupsLists";
-import AdminLayout from "../Admins/Layouts/AdminLayout";
-import StudentLayout from "../Students/Layouts/StudentLayout";
 import Reclamations from "../Admins/Reclamations/Reclamations";
 import StudentChat from "../Students/StudentChat";
 import NotFoundPage from "../Global/NotFound";
 import ProfLogin from "../Professors/login/ProfLogin";
 import SuiviDesJustification from "../Students/Justifications/Suivi des Justificatifs/SuiviDesJustification";
-import ProfLayout from "../Professors/Layouts/ProfLayout";
 import ProfDashboard from "../Professors/Dashboard/ProfDashboard";
 import AuthSystem from "../AuthSystem";
 import AdminProfile from "../Admins/AdminProfil/AdminProfil";
+import Layout from "../Global/Layout";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -41,12 +39,12 @@ export const router = createBrowserRouter([
   {
     element: (
       <ProtectedRoute allowedRole="student">
-        <StudentLayout />
+        <Layout role={"student"} />
       </ProtectedRoute>
     ),
     children: [
       { path: "/student-dashboard", element: <Dashboard /> },
-      { path: "/profile", element: <StudentProfile /> },
+      // { path: "/profile", element: <StudentProfile /> },
       { path: "/submit", element: <StudentJustificationForm /> },
       { path: "/messages", element: <StudentChat /> },
       { path: "/Suivi_Justification", element: <SuiviDesJustification /> },
@@ -58,7 +56,7 @@ export const router = createBrowserRouter([
   {
     element: (
       <ProtectedRoute allowedRole="admin">
-        <AdminLayout />
+        <Layout role={"admin"} />
       </ProtectedRoute>
     ),
     children: [
@@ -84,14 +82,14 @@ export const router = createBrowserRouter([
       },
       {
         path: "/admin/profile",
-        element: <AdminProfile />,
+        element: <AdminProfile/>,
       },
     ],
   },
   {
     element: (
       <ProtectedRoute allowedRole="prof">
-        <ProfLayout />
+        <Layout role={"prof"} />
       </ProtectedRoute>
     ),
     children: [
@@ -99,10 +97,7 @@ export const router = createBrowserRouter([
         path: "/professor-dashboard",
         element: <ProfDashboard />,
       },
-      {
-        path: "/Gestion_De_Justification",
-        element: <Justification />,
-      },
+
       {
         path: "/Consultation_Des_Absences",
         element: <GroupsLists />,

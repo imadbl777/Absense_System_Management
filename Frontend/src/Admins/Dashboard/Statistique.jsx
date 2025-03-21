@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+
 import {
   LineChart,
   Line,
@@ -10,17 +9,11 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import {
-  CheckCircle,
-  XCircle,
-  Clock,
-  BarChart3,
-  AlertTriangle,
-} from "lucide-react";
+import { CheckCircle, Clock, BarChart3, AlertTriangle } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
 import Loading from "../../Tools/Loading";
+import useFetch from "../../Hooks/useFetch";
 
-const token = localStorage.getItem("auth_token");
 
 const StatusCard = ({ title, value, icon: Icon, color, darkMode }) => (
   <div
@@ -38,15 +31,7 @@ const StatusCard = ({ title, value, icon: Icon, color, darkMode }) => (
   </div>
 );
 
-StatusCard.propTypes = {
-  title: PropTypes.string.isRequired,
-  value: PropTypes.number.isRequired,
-  icon: PropTypes.elementType.isRequired,
-  color: PropTypes.string.isRequired,
-  darkMode: PropTypes.bool.isRequired,
-};
-
-const ErrorDisplay = ({ message, onRetry, darkMode }) => (
+const ErrorDisplay = ({ message, darkMode }) => (
   <div
     className={`w-full p-8 flex flex-col items-center justify-center ${
       darkMode ? "text-red-400" : "text-red-500"
@@ -55,7 +40,6 @@ const ErrorDisplay = ({ message, onRetry, darkMode }) => (
     <AlertTriangle className="h-12 w-12 mb-4" />
     <p className="text-lg font-medium text-center">{message}</p>
     <button
-      onClick={onRetry}
       className={`mt-4 px-6 py-2 rounded-lg transition-colors duration-200 font-medium ${
         darkMode ? "bg-red-800 text-red-300" : "bg-red-100 text-red-600"
       }`}
@@ -87,6 +71,7 @@ const ChartSection = ({ data, darkMode }) => (
         <Tooltip
           contentStyle={{
             backgroundColor: darkMode ? "#1f2937" : "#ffffff",
+
             color: darkMode ? "#ffffff" : "#000000",
             border: "none",
             borderRadius: "0.5rem",
@@ -115,51 +100,15 @@ const ChartSection = ({ data, darkMode }) => (
 );
 
 const Statistique = () => {
-  const [statistics, setStatistics] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [darkMode] = useOutletContext();
-
-  const fetchStatistics = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/admin/getStatistics`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
-      const data = await response.json();
-      setStatistics(data);
-      setError(null);
-    } catch (err) {
-      console.error("Error fetching statistics:", err);
-      setError(err.message || "Failed to load statistics");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchStatistics();
-  }, []);
+  const {
+    data: statistics,
+    loading,
+    error,
+  } = useFetch(`${import.meta.env.VITE_BACKEND_URL}/api/admin/getStatistics`);
 
   if (loading) return <Loading />;
-  if (error)
-    return (
-      <ErrorDisplay
-        message={error}
-        onRetry={fetchStatistics}
-        darkMode={darkMode}
-      />
-    );
+  if (error) return <ErrorDisplay message={error} darkMode={darkMode} />;
 
   return (
     <div
@@ -191,13 +140,6 @@ const Statistique = () => {
             value={statistics.current_month.pending_justifications}
             icon={Clock}
             color={darkMode ? "text-orange-400" : "text-orange-600"}
-            darkMode={darkMode}
-          />
-          <StatusCard
-            title="Rejected"
-            value={statistics.current_month.rejected_justifications}
-            icon={XCircle}
-            color={darkMode ? "text-red-400" : "text-red-600"}
             darkMode={darkMode}
           />
         </div>

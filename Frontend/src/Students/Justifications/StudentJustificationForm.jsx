@@ -20,7 +20,7 @@ const StudentJustificationForm = () => {
   const fetchAbsentSessions = async () => {
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/api/absent-sessions",
+        "http://127.0.0.1:8000/api/student/absent-sessions",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
@@ -45,7 +45,7 @@ const StudentJustificationForm = () => {
       formData.append("session_id", selectedSession);
       formData.append("description", description);
       formData.append("document", file);
-      const response = await fetch("http://127.0.0.1:8000/api/justifications", {
+      const response = await fetch("http://127.0.0.1:8000/api/student/justifications", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("auth_token")}`,

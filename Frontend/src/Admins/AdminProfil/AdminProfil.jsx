@@ -1,44 +1,11 @@
 /* eslint-disable react/prop-types */
-
-import { useState, useEffect } from "react";
 import { User } from "lucide-react";
 import { Link } from "react-router-dom";
-
+import useFetch from "../../Hooks/useFetch";
 const AdminProfile = ({ isExpand, darkMode }) => {
-  const [adminData, setAdminData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchAdminDetails = async () => {
-      try {
-        const response = await fetch(
-          `http://127.0.0.1:8000/api/admin/details`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch profile");
-        }
-
-        const data = await response.json();
-        console.log(data);
-
-        setAdminData(data);
-      } catch (error) {
-        console.error("Error fetching admin details:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAdminDetails();
-  }, []);
+  const { data: adminData, loading: loading } = useFetch(
+    `${import.meta.env.VITE_BACKEND_URL}/api/admin/profil`
+  );
 
   return (
     <div
@@ -66,14 +33,14 @@ const AdminProfile = ({ isExpand, darkMode }) => {
                 darkMode ? "hover:text-blue-300" : "hover:text-blue-600"
               }`}
             >
-              {loading ? "Loading..." : adminData?.name}
+              {loading ? "Loading..." : adminData.name || "hello"}
             </h1>
             <p
               className={`text-sm ${
                 darkMode ? "text-gray-400" : "text-gray-500"
               }`}
             >
-              {loading ? "Loading..." : adminData?.role || "Administrator"}
+              {loading ? "Loading..." : adminData.role || "Administrator"}
             </p>
           </div>
         )}

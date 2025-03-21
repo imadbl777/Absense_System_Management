@@ -1,13 +1,13 @@
 import { useState } from "react";
 import axios from "axios";
 import { Lock, Mail, UserCog } from "lucide-react";
-
+import { ToastContainer, toast } from "react-toastify";
 const ProfLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  console.log(`email ${email}`);
+  const notify = (mess) => toast.error(`${mess}`);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -32,7 +32,8 @@ const ProfLogin = () => {
       }
     } catch (err) {
       console.log(err);
-      setError("Les informations d`identification sont incorrectes");
+      setError(err.response.data.message);
+      notify(`${error}`);
     } finally {
       setIsLoading(false);
     }
@@ -51,12 +52,6 @@ const ProfLogin = () => {
             Connexion Professor
           </h2>
         </div>
-
-        {error && (
-          <div className="mb-6 bg-red-500 border border-red-600 text-white text-center py-3 px-4 rounded-lg shadow">
-            {error}
-          </div>
-        )}
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
@@ -126,6 +121,18 @@ const ProfLogin = () => {
           </button>
         </form>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 };

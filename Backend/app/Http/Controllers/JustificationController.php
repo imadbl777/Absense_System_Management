@@ -50,13 +50,11 @@ class JustificationController extends Controller
 
 
             $path = null;
-
-
             if ($request->hasFile('document')) {
                 $file = $request->file('document');
 
 
-                $filename = uniqid() . '_' . $file->getClientOriginalName();
+                $filename = uniqid() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
 
 
                 $path = $file->storeAs('justifications', $filename, 'public');
@@ -67,8 +65,6 @@ class JustificationController extends Controller
 
                 $path = $publicUrl;
             }
-
-
             $justification = Justification::create([
                 'student_id' => auth()->user()->student_id,
                 'session_id' => $validated['session_id'],
@@ -104,7 +100,6 @@ class JustificationController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
         } catch (\Exception $e) {
-            \Log::error('Justification submission error: ' . $e->getMessage());
             return response()->json(['error' => 'An unexpected error occurred', 'details' => $e->getMessage()], 500);
         }
     }
@@ -161,13 +156,13 @@ class JustificationController extends Controller
 
     public function index()
     {
-        // Fetch justifications with related student and session.subject
         $justifications = Justification::with(['student', 'session.subject'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         return response()->json($justifications);
     }
+
     public function message(Request $request)
     {
         event(new Message($request->input('username'), $request->input('message')));
@@ -176,36 +171,18 @@ class JustificationController extends Controller
     public function downloadDocument($id)
     {
         try {
-           
             $justification = Justification::findOrFail($id);
-
-          
             if ($justification->student_id !== auth()->user()->student_id) {
                 return response()->json(['error' => 'Unauthorized'], 403);
             }
-
             $fullPath = public_path('storage/Justifications/' . basename($justification->document_path));
-
-            \Log::info('Download attempt details', [
-                'original_path' => $justification->document_path,
-                'full_server_path' => $fullPath
-            ]);
-
- 
             if (!file_exists($fullPath)) {
-                \Log::error('Document not found', [
-                    'path' => $fullPath,
-                    'original_path' => $justification->document_path
-                ]);
                 return response()->json([
                     'error' => 'Document not found',
                     'path' => $fullPath
                 ], 404);
             }
-
             $filename = basename($justification->document_path);
-
-            
             return response()->download(
                 $fullPath,
                 $filename,
@@ -215,11 +192,6 @@ class JustificationController extends Controller
                 ]
             );
         } catch (\Exception $e) {
-            \Log::error('Download error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-
             return response()->json([
                 'error' => 'An error occurred while downloading the document',
                 'message' => $e->getMessage()

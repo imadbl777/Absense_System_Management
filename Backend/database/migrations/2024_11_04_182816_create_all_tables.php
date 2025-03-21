@@ -77,18 +77,17 @@ return new class extends Migration {
                   $table->increments('student_id');
                   $table->string('first_name', 50);
                   $table->string('last_name', 50);
-                  $table->string('card_number', 20)->unique();
+                  $table->date('date_naissance');
+                  $table->enum("sexe", ['homme', 'femme']);
                   $table->unsignedInteger('branch_id')->nullable();
                   $table->unsignedInteger('group_id')->nullable();
                   $table->string('gmail', 100)->unique()->nullable();
                   $table->string('phone_number', 15)->nullable();
                   $table->timestamps();
-
                   $table->foreign('branch_id')
                         ->references('branch_id')
                         ->on('branches')
                         ->onDelete('set null');
-
                   $table->foreign('group_id')
                         ->references('group_id')
                         ->on('groups')

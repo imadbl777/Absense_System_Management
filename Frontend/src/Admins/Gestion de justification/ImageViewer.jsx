@@ -2,6 +2,8 @@
 import { IoCloseSharp } from "react-icons/io5";
 
 const ImageViewer = ({ imageUrl, onClose }) => {
+  console.log(imageUrl);
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-90 z-[60] flex items-center justify-center">
       <button

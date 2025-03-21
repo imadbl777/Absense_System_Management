@@ -1,24 +1,23 @@
 import { useState } from "react";
 import axios from "axios";
 import { GraduationCap, Lock, Mail } from "lucide-react";
-
+import { ToastContainer, toast } from "react-toastify";
 const StudentLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const notify = (mes) => toast.error(`${mes}`);
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
-    const endpoint = `http://localhost:8000/api/student/login`;
+    const endpoint = `${import.meta.env.VITE_BACKEND_URL}/api/student/login`;
 
     try {
       const response = await axios.post(endpoint, { email, password });
       const { token, role } = response.data;
-
       localStorage.setItem("auth_token", token);
       localStorage.setItem("user_role", role);
 
@@ -31,7 +30,8 @@ const StudentLogin = () => {
       }
     } catch (err) {
       console.log(err);
-      setError("Les informations d`identification sont incorrectes");
+      setError(err.response.data.message);
+      notify(`${error}`);
     } finally {
       setIsLoading(false);
     }
@@ -48,13 +48,6 @@ const StudentLogin = () => {
           </div>
           <h2 className="text-3xl font-bold text-gray-800">Connexion</h2>
         </div>
-
-        {error && (
-          <div className="mb-6 bg-red-500 border border-red-600 text-white text-center py-3 px-4 rounded-lg shadow">
-            {error}
-          </div>
-        )}
-
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -123,6 +116,18 @@ const StudentLogin = () => {
           </button>
         </form>
       </div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 };
