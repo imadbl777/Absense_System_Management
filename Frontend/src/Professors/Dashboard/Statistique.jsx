@@ -13,7 +13,8 @@ import { useEffect, useState } from "react";
 const Statistique = () => {
   const [sessions, setsessions] = useState([]);
 
-
+  console.log(getSessions(1));
+  
   const timeSlots = Array.from({ length: 22 }, (_, i) => {
     const hour = Math.floor(i / 2) + 8;
     const minute = i % 2 === 0 ? "00" : "30";

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\Justification;
 use App\Models\Student;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class StudentsController extends Controller
@@ -107,4 +109,21 @@ class StudentsController extends Controller
         }
         return response()->json($students);
     }
+    public function s()
+    {
+
+        $students = DB::select("
+        SELECT students.first_name, students.last_name, justifications.status, groups.group_name ,session_date
+        FROM students
+        JOIN justifications ON students.student_id = justifications.student_id
+        JOIN `groups`ON  students.group_id=groups.group_id
+        JOIN `sessions` ON sessions.group_id=groups.group_id
+    ");
+
+
+
+        return response()->json($students);
+    }
+
+
 }

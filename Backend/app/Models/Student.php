@@ -37,6 +37,10 @@ class Student extends Authenticatable
     {
         return $this->hasMany(Attendance::class, 'student_id');
     }
+    public function justifcations()
+    {
+        return $this->hasMany(Justification::class, 'student_id');
+    }
 
     public function warnings()
     {

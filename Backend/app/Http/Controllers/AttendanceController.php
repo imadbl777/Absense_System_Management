@@ -24,12 +24,14 @@ class AttendanceController extends Controller
         return response()->json(['message' => 'Attendance marked successfully'], 200);
     }
 
-    public function s()
+    public function absent(Request $request)
     {
-        $isattended = Attendance::with('student')->where("attended", "=", false)->get();
-        $student = $isattended->map(function ($a) {
-            return $a->student->first_name . $a->student->last_name;
-        });
-        return response()->json($student);
+        $id = $request->query('studentId');
+        $isnotattended = Attendance::with(['session', 'student.group'])
+            ->where('attended', false)
+            ->where('student_id', $id)
+            ->get(['attended', 'session_id', 'student_id']);
+
+        return response()->json($isnotattended);
     }
 }

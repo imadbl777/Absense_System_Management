@@ -13,6 +13,7 @@ use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\UserController;
+use App\Models\Attendance;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Broadcast;
@@ -53,6 +54,8 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/groups', [GroupsController::class, 'getGroups']);
             Route::get('/students', [GroupsController::class, 'getStudents']);
             Route::get('/student', [StudentsController::class, 'searching']);
+            Route::get('/absences', [AttendanceController::class, 'absent']);
+            Route::get('/absence', [StudentsController::class, 'absent']);
         });
 
         Route::get('/attend', [AttendanceController::class, 's']);
@@ -71,3 +74,5 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 Route::get('/generate-qr-codes', [QrCodeController::class, 'generateQrCodes']);
 Route::get('/qr-code/{studentId}', [QrCodeController::class, 'getQrCode']);
+
+Route::get('/test', [StudentsController::class, 's']);

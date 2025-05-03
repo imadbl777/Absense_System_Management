@@ -45,13 +45,16 @@ const StudentJustificationForm = () => {
       formData.append("session_id", selectedSession);
       formData.append("description", description);
       formData.append("document", file);
-      const response = await fetch("http://127.0.0.1:8000/api/student/justifications", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-        body: formData,
-      });
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/student/justifications",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
@@ -86,7 +89,7 @@ const StudentJustificationForm = () => {
               : "bg-yellow-100 text-yellow-800"
           } border border-yellow-300 rounded-lg`}
         >
-          <p>You don't have any absences that require justification.</p>
+          <p>Vous n'avez aucune absence nécessitant une justification.</p>
         </div>
       </div>
     );
@@ -100,11 +103,13 @@ const StudentJustificationForm = () => {
           : "bg-white text-black border-gray-300"
       }`}
     >
-      <h2 className="text-xl font-bold mb-4">Submit Absence Justification</h2>
+      <h2 className="text-xl font-bold mb-4">
+        Soumettre une justification d'absence
+      </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1">
-            Select Session
+            Sélectionner une session
           </label>
           <select
             value={selectedSession}
@@ -116,7 +121,7 @@ const StudentJustificationForm = () => {
             }`}
             required
           >
-            <option value="">Select a session...</option>
+            <option value="">Sélectionner une session...</option>
             {absentSessions.map((session) => (
               <option key={session.session_id} value={session.session_id}>
                 {session.subject.subject_name} -{" "}
@@ -128,7 +133,7 @@ const StudentJustificationForm = () => {
 
         <div>
           <label className="block text-sm font-medium mb-1">
-            Reason for Absence
+            Motif de l'absence
           </label>
           <textarea
             value={description}
@@ -145,7 +150,7 @@ const StudentJustificationForm = () => {
 
         <div>
           <label className="block text-sm font-medium mb-1">
-            Supporting Document
+            Document justificatif
           </label>
           <div
             className={`border-2 border-dashed rounded-md p-4 text-center ${
@@ -166,7 +171,7 @@ const StudentJustificationForm = () => {
                   darkMode ? "text-gray-400" : "text-gray-600"
                 }`}
               >
-                Click to upload a document
+                Cliquez pour télécharger un document
               </span>
             </label>
             {file && (
@@ -199,7 +204,7 @@ const StudentJustificationForm = () => {
                 : "bg-green-100 text-green-800"
             } border border-green-300 rounded-lg`}
           >
-            <p>Justification submitted successfully!</p>
+            <p>Justification soumise avec succès !</p>
           </div>
         )}
 
@@ -210,7 +215,7 @@ const StudentJustificationForm = () => {
             darkMode ? "bg-blue-800 text-white" : "bg-blue-600 text-white"
           }`}
         >
-          {loading ? "Submitting..." : "Submit Justification"}
+          {loading ? "Soumission......" : "Soumettre une justification"}
         </button>
       </form>
     </div>

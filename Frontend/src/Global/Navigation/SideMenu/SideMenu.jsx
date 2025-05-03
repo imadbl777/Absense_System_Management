@@ -8,7 +8,7 @@ const SideMenu = ({ darkMode, role }) => {
   const [selectedPath, setSelectedPath] = useState("/admin-dashboard");
   const [isExpand, setIsExpand] = useState(true);
   const { data: adminData, loading: adminLoading } = useFetch(
-    `${import.meta.env.VITE_BACKEND_URL}/api/admin/profil`
+    `http://localhost:8000/api/admin/profil`
   );
   const { data: studentData, loading: studentLoading } = useFetch(
     `${import.meta.env.VITE_BACKEND_URL}/api/student/profil`

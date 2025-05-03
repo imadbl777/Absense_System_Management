@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "../Students/Dashboard/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
@@ -16,8 +17,8 @@ import ProfLogin from "../Professors/login/ProfLogin";
 import SuiviDesJustification from "../Students/Justifications/Suivi des Justificatifs/SuiviDesJustification";
 import ProfDashboard from "../Professors/Dashboard/ProfDashboard";
 import AuthSystem from "../AuthSystem";
-import AdminProfile from "../Admins/AdminProfil/AdminProfil";
 import Layout from "../Global/Layout";
+import ProfilA from "../Admins/AdminProfil/ProfilA";
 
 export const router = createBrowserRouter([
   {
@@ -44,7 +45,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       { path: "/student-dashboard", element: <Dashboard /> },
-      // { path: "/profile", element: <StudentProfile /> },
+      // { path: "/profile", element: <ProfilA /> },
       { path: "/submit", element: <StudentJustificationForm /> },
       { path: "/messages", element: <StudentChat /> },
       { path: "/Suivi_Justification", element: <SuiviDesJustification /> },
@@ -82,7 +83,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/admin/profile",
-        element: <AdminProfile/>,
+        element: <ProfilA />,
       },
     ],
   },

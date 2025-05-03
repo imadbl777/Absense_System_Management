@@ -1,10 +1,13 @@
+/* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
 
 import { User } from "lucide-react";
 import { Link } from "react-router-dom";
 
 function Profil({ isExpand, darkMode, data, loading, role }) {
+console.log(data);
 
+  
 
   return (
     <div

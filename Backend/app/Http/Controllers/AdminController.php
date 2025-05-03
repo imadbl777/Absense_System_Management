@@ -17,7 +17,6 @@ class AdminController extends Controller
      */
     public function index()
     {
-        // Return a list of admins (can be paginated or filtered)
         $admins = Admin::latest()->paginate(10);
         return response()->json($admins);
     }
@@ -132,13 +131,14 @@ class AdminController extends Controller
     {
         $admin = auth()->user();
 
+
         if (!$admin) {
             return response()->json(['message' => 'User not authenticated'], 401);
         }
 
         return response()->json([
             'name' => $admin->name,
-            'email' => $admin->email
+
         ]);
     }
     public function getStatistics(): JsonResponse
